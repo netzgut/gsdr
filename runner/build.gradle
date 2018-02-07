@@ -1,0 +1,57 @@
+plugins {
+    id 'groovy'
+    id 'com.energizedwork.webdriver-binaries' version '1.4'
+}
+
+version = '0.0.1'
+description = 'an automatic headless chrome geb-spock-runner'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    versions = [
+        groovy: '2.4.13',
+        geb: '2.1',
+        spock: '1.1-groovy-2.4',
+        selenium: '3.8.1',
+        driverChrome: '2.35'
+    ]
+}
+
+dependencies {
+    testCompile "org.codehaus.groovy:groovy-all:$versions.groovy"
+    
+    testCompile "org.gebish:geb-spock:$versions.geb"
+    testCompile("org.spockframework:spock-core:$versions.spock") {
+        exclude group: 'org.codehaus.groovy'
+    }
+
+    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:$versions.selenium"
+
+}
+
+apply from: 'runner-settings.gradle'
+
+webdriverBinaries {
+    chromedriver versions.driverChrome
+}
+
+task chromeHeadlessTest(type: Test) {
+    group JavaBasePlugin.VERIFICATION_GROUP
+
+    outputs.upToDateWhen { false }  // Always run tests
+
+    systemProperty 'geb.build.baseUrl', gebBaseUrl
+    systemProperty 'geb.build.reportsDir', reporting.file("geb/$name")
+}
+
+test {
+    dependsOn chromeHeadlessTest
+    enabled = false
+}
+
+task wrapper(type: Wrapper) { gradleVersion = '4.5' }

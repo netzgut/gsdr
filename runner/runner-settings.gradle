@@ -1,0 +1,13 @@
+ext {
+    // You need to either set yor baseUrl here or in the specs itself directly on browser
+    // e.g.
+    // def setupSpec() {
+    //    browser.setBaseUrl("http://gebish.org")
+    // }
+    gebBaseUrl = ''
+}
+
+dependencies {
+    // Insert additional dependencies here
+    // e.g. testCompile 'org.apache.commons:commons-lang3:3.7'
+}
